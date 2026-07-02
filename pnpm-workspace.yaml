@@ -1,4 +1,8 @@
-nodeLinker: isolated
 packages:
-  - 'frontend'
-  - 'backend'
+  - frontend
+  - backend
+
+ignoredBuiltDependencies:
+  - esbuild
+
+nodeLinker: isolated
