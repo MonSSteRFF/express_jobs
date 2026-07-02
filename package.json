@@ -1,0 +1,19 @@
+{
+	"name": "fullstack_test",
+	"version": "1.0.0",
+	"author": "Vlad",
+	"type": "module",
+	"scripts": {
+		"dev:back": "pnpm --filter backend dev",
+		"dev:front": "pnpm --filter frontend dev",
+		"dev": "pnpm --filter \"*\" dev",
+		"dev:docker": "docker-compose -f infra/docker-compose.yml --profile \"*\" up -d",
+		"lint": "biome lint --fix"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.2"
+	},
+	"peerDependencies": {
+		"typescript": "^6"
+	}
+}

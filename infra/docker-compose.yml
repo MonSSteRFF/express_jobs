@@ -1,0 +1,30 @@
+services:
+  frontend:
+    build:
+      dockerfile: infra/dev.Dockerfile
+      context: ../
+    working_dir: /frontend
+    volumes:
+      - ../:/app/
+    ports:
+      - '3001:3001'
+    depends_on:
+      - backend
+    profiles: [ 'app' ]
+    command: pnpm run dev
+  backend:
+    build:
+      dockerfile: infra/dev.Dockerfile
+      context: ../
+    working_dir: /backend
+    volumes:
+      - ../:/app/
+      - sqlite_data:/backend/src/db/mydb.sqlite
+    ports:
+      - '8081:8081'
+    profiles: [ 'app' ]
+    command: pnpm run dev:docker
+
+volumes:
+  sqlite_data:
+    name: sqlite_db

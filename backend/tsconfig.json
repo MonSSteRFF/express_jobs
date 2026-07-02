@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"outDir": "./dist",
+
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@infra/*": ["./src/infra/*"],
+			"@inter/*": ["./src/inter/*"],
+			"@utils/*": ["./src/utils/*"]
+		}
+	}
+}

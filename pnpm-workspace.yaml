@@ -1,0 +1,4 @@
+nodeLinker: isolated
+packages:
+  - 'frontend'
+  - 'backend'
