@@ -1,3 +1,5 @@
+tz: https://docs.google.com/document/d/19szbENkvcJS5oY0OcwxL6HVwwyAv44EmaIvO_ccKKmQ/edit?tab=t.0
+
 ### init project
 
 1. install dependencies
