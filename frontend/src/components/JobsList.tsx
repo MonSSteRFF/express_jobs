@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import styles from "./JobsList.module.css";
 
 export const JobsList: React.FC = () => {
-	const { addJobs, jobs } = useJobs();
+	const { addJobs, jobs, removeJob } = useJobs();
 
 	const refetch = () => {
 		jobsApi.list().then((data) => {
@@ -23,6 +23,14 @@ export const JobsList: React.FC = () => {
 	}, [addJobs]);
 
 	const intl = Intl.DateTimeFormat("ru", { dateStyle: "short", timeStyle: "long", hourCycle: "h24" });
+
+	const handleDelete = (id: string) => {
+		jobsApi.delete(id).then((data) => {
+			if (data.success) {
+				removeJob(id);
+			}
+		});
+	};
 
 	return (
 		<div className={styles.content}>
@@ -43,6 +51,10 @@ export const JobsList: React.FC = () => {
 							{job.error && <p>error: {job.error}</p>}
 							{job.startedAt && <p>startedAt: {intl.format(job.startedAt)}</p>}
 							{job.finishedAt && <p>finishedAt: {intl.format(job.finishedAt)}</p>}
+
+							<button type={"button"} onClick={() => handleDelete(job.id)}>
+								delete
+							</button>
 						</div>
 					);
 				})}

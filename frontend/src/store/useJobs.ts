@@ -8,6 +8,7 @@ interface JobsStoreValues {
 }
 interface IJobsStoreActions {
 	addJobs: (data: { jobs: IJob[]; stats: JobsStoreValues["stats"] }) => void;
+	removeJob: (id: string) => void;
 }
 
 type JobsStore = JobsStoreValues & IJobsStoreActions;
@@ -24,6 +25,10 @@ export const useJobs = create<JobsStore>()(
 			set((state) => {
 				state.jobs = data.jobs.sort((a, b) => b.createdAt - a.createdAt);
 				state.stats = data.stats;
+			}),
+		removeJob: (id: string) =>
+			set((state) => {
+				state.jobs = state.jobs.filter((job) => job.id !== id);
 			}),
 	})),
 );
