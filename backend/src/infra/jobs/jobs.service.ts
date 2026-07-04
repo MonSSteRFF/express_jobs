@@ -1,6 +1,6 @@
 import type { DiContainer } from "@infra/di/di";
 import { type IJob, JobStatus } from "@infra/jobs/jobs.types";
-import { eq, not } from "drizzle-orm";
+import { and, eq, inArray, not } from "drizzle-orm";
 import type { NodeSQLiteDatabase } from "drizzle-orm/node-sqlite";
 import { jobsTable } from "@/db/schema";
 
@@ -18,6 +18,7 @@ export class JobsService {
 				id: undefined,
 				url: job,
 				status: JobStatus.pending,
+				createdAt: Date.now(),
 			})
 			.returning({ id: jobsTable.id });
 
@@ -39,36 +40,25 @@ export class JobsService {
 		return insertedRows.map((row) => row.id);
 	}
 
-	async updateJob(
-		id: string,
-		job: Pick<
-			IJob,
-			"status" | "startedAt" | "finishedAt" | "httpStatus" | "error"
-		>,
-	) {
-		const rows = await this.db
-			.update(jobsTable)
-			.set(job)
-			.where(eq(jobsTable.id, id))
-			.returning();
-
-		const updatedJob = rows[0];
-
-		if (!updatedJob) {
-			throw new Error(`Job with id ${id} not found`);
-		}
-
-		return updatedJob;
+	async updateJob(id: string, job: Partial<Pick<IJob, "status" | "startedAt" | "finishedAt" | "httpStatus" | "error">>) {
+		const rows = await this.db.update(jobsTable).set(job).where(eq(jobsTable.id, id)).returning();
+		return rows.length > 0 ? rows[0] : null;
 	}
 
 	getJob(id: string) {
 		return this.db.select().from(jobsTable).where(eq(jobsTable.id, id)).get();
 	}
 
-	async getAllNonDeletedJobs() {
-		return this.db
+	async getAll(args: { statuses?: JobStatus[]; ignoredStatuses?: JobStatus[]; limit?: number }) {
+		const query = this.db
 			.select()
 			.from(jobsTable)
-			.where(not(eq(jobsTable.status, JobStatus.deleted)));
+			.where(and(args.statuses ? inArray(jobsTable.status, args.statuses) : undefined, args.ignoredStatuses ? not(inArray(jobsTable.status, args.ignoredStatuses)) : undefined));
+
+		if (args.limit) {
+			query.limit(args.limit);
+		}
+
+		return await query;
 	}
 }

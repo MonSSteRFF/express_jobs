@@ -1,18 +1,29 @@
 import { initControllers } from "@inter/http/controllers";
 import { env } from "@utils/env";
+import { logger } from "@utils/logger";
 import express from "express";
-import { createDi } from "@/infra/di/di";
+import type { DiContainer } from "@/infra/di/di";
 
-export const createHttpInterface = async () => {
+export const createHttpInterface = async (container: DiContainer) => {
 	const app = express();
+
 	app.use(express.json());
 
-	const container = await createDi();
+	const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
+	app.use((req, res, next) => {
+		const origin = req.headers.origin;
+		if (origin && allowedOrigins.includes(origin)) {
+			res.setHeader("Access-Control-Allow-Origin", origin);
+		}
+		res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE");
+		res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		next();
+	});
 
-	app.use("/api", () => initControllers(app, container));
+	initControllers(app, container);
 
-	app.listen(env.PORT, () => {
-		console.log(`Server started on port ${env.PORT}`);
+	app.listen(env.PORT, env.HOST, () => {
+		logger(`Server started on port http://${env.HOST}:${env.PORT}`);
 	});
 
 	return app;

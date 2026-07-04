@@ -15,19 +15,10 @@ interface EndpointSchema<
 	response?: TResponse;
 }
 
-export const validateRoute = <
-	TBody extends z.ZodTypeAny,
-	TParams extends z.ZodTypeAny,
-	TQuery extends z.ZodTypeAny,
-	TResponse extends z.ZodTypeAny,
->(
+export const validateRoute = <TBody extends z.ZodTypeAny, TParams extends z.ZodTypeAny, TQuery extends z.ZodTypeAny, TResponse extends z.ZodTypeAny>(
 	schema: EndpointSchema<TBody, TParams, TQuery, TResponse>,
 ) => {
-	return async (
-		req: Request<z.infer<TParams>, unknown, z.infer<TBody>, z.infer<TQuery>>,
-		res: Response,
-		next: NextFunction,
-	) => {
+	return async (req: Request<z.infer<TParams>, unknown, z.infer<TBody>, z.infer<TQuery>>, res: Response, next: NextFunction) => {
 		try {
 			if (schema.request?.body) {
 				req.body = await schema.request.body.parseAsync(req.body);
@@ -40,9 +31,7 @@ export const validateRoute = <
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				return res
-					.status(400)
-					.json({ error: "Validation request failed", details: error });
+				return res.status(400).json({ error: "Validation request failed", details: error });
 			}
 			return next(error);
 		}
@@ -55,9 +44,7 @@ export const validateRoute = <
 					const validatedResponse = schema.response!.parse(bodyData);
 					return originalJson.call(this, validatedResponse);
 				} catch (error) {
-					return res
-						.status(400)
-						.json({ error: "Validation response failed", details: error });
+					return res.status(400).json({ error: "Validation response failed", details: error });
 				}
 			};
 		}

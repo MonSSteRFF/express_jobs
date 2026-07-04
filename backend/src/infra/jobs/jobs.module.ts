@@ -10,12 +10,11 @@ export class JobsModule {
 	}
 
 	async create(urls: Pick<IJob, "url">["url"][]) {
-		const createdIds = await this.jobsService.createJobs(urls);
-		return createdIds.map((id) => ({ jobid: id }));
+		return await this.jobsService.createJobs(urls);
 	}
 
 	async getAll() {
-		return await this.jobsService.getAllNonDeletedJobs();
+		return await this.jobsService.getAll({ ignoredStatuses: [JobStatus.cancelled] });
 	}
 
 	getOne(id: string) {
@@ -24,11 +23,11 @@ export class JobsModule {
 
 	async delete(id: string) {
 		try {
-			await this.jobsService.updateJob(id, { status: JobStatus.deleted });
-			return true;
+			const updated = await this.jobsService.updateJob(id, { status: JobStatus.cancelled });
+			return { success: !!updated };
 		} catch (error) {
 			console.error(error);
-			return false;
+			return { success: false };
 		}
 	}
 }

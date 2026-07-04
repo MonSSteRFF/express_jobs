@@ -1,0 +1,21 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+  gap: 8px;
+}
+
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.list_item {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px;
+	background-color: #616161;
+	border-radius: 8px;
+}

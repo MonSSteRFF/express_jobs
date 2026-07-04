@@ -1,13 +1,18 @@
+name: "jobs"
 services:
   frontend:
     build:
       dockerfile: infra/dev.Dockerfile
       context: ../
-    working_dir: /frontend
+    working_dir: /app/frontend
     volumes:
       - ../:/app/
     ports:
       - '3001:3001'
+    environment:
+      - VITE_PORT=3001
+      - VITE_API_ENDPOINT=http://localhost:8081/api
+      - DOCKER=true
     depends_on:
       - backend
     profiles: [ 'app' ]
@@ -16,7 +21,7 @@ services:
     build:
       dockerfile: infra/dev.Dockerfile
       context: ../
-    working_dir: /backend
+    working_dir: /app/backend
     volumes:
       - ../:/app/
       - sqlite_data:/backend/src/db/mydb.sqlite

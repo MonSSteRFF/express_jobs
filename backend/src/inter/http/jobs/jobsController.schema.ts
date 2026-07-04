@@ -5,7 +5,7 @@ export const CreateJobsSchema = {
 	request: {
 		body: z.object({ urls: z.array(z.string()) }),
 	},
-	response: z.array(z.object({ id: z.string() })),
+	response: z.array(z.string()),
 };
 
 export const GetJobsListSchema = {

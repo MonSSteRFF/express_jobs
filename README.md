@@ -9,9 +9,11 @@ tz: https://docs.google.com/document/d/19szbENkvcJS5oY0OcwxL6HVwwyAv44EmaIvO_ccK
    - back: ```pnpm run dev:back```
    - front: ```pnpm run dev:front```
    - front + back parallel: ```pnpm run dev```
+   - site http://localhost:3000
 3. run in dev docker container
    - if docker do not installed, use guide [here](https://docs.docker.com/engine/install/)
    - ```pnpm run dev:docker```
+   - site http://localhost:3001
 
 ### utility
 
