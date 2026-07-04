@@ -33,4 +33,3 @@ tz: https://docs.google.com/document/d/19szbENkvcJS5oY0OcwxL6HVwwyAv44EmaIvO_ccK
 3. front
    - react - front lib
    - vite - bundler + dev runtime for typescript
-   - mantine - components lib
