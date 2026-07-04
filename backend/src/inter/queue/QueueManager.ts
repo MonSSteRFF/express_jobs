@@ -1,5 +1,3 @@
-import EventEmitter from "node:events";
-
 interface QueueConfig<T> {
 	maxConcurrency: number;
 	getter: () => Promise<Array<T>>;
